@@ -75,6 +75,14 @@ describe("DscGrabber", function() {
     });
   });
 
+  it("parses a errorneous remote dsc", function(done) {
+    dsc = new DscGrabber("http://0.0.0.1/nonexistant.dsc");
+    dsc.parse(function(err, parsed) {
+      assert.notStrictEqual(err, "undefined");
+      done();
+    });
+  });
+
 
 
 });
