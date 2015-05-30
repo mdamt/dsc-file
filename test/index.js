@@ -61,6 +61,20 @@ describe("DscGrabber", function() {
     });
   });
 
+  it("parses a non-existant remote dsc", function(done) {
+    var f = "nonexistant.dsc";
+    nock(remote)
+      .get("/" + f)
+      .reply(404,{});
+
+    dsc = new DscGrabber("http://remote.site/nonexistant.dsc");
+    dsc.parse(function(err, parsed) {
+      assert.strictEqual(err.code, 404);
+      assert.notStrictEqual(err, "undefined");
+      done();
+    });
+  });
+
 
 
 });
