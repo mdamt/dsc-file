@@ -20,5 +20,15 @@ describe("DscGrabber", function() {
     });
   });
 
+  it("breaks because specified file doesn't exist", function(done) {
+    dsc = new DscGrabber(data + "nonexistant-dsc");
+    dsc.parse(function(err, parsed) {
+      assert.strictEqual(err.code, "ENOENT");
+      assert.notStrictEqual(err, "undefined");
+      done();
+    });
+  });
+
+
 
 });
