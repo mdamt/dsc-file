@@ -11,16 +11,23 @@
   "author": "Mohammad Anwari <mdamt@mdamt.net> (http://aksi.mdamt.net/)",
   "license": "MIT",
   "dependencies": {
+    "hyperquest": "^1.2.0",
     "internet-message": "^1.0.0"
   },
   "devDependencies": {
     "blanket": "^1.1.7",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "nock": "^2.3.0"
   },
   "config": {
     "blanket": {
-      "pattern": [ "lib" ],
-      "data-cover-never": [ "node_modules", "test" ]
+      "pattern": [
+        "lib"
+      ],
+      "data-cover-never": [
+        "node_modules",
+        "test"
+      ]
     }
   }
 }

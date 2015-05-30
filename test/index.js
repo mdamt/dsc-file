@@ -1,5 +1,7 @@
 var assert = require("assert");
+var nock = require("nock");
 var data = __dirname + "/assets/";
+var remote = "http://remote.site";
 describe("DscGrabber", function() {
   var DscGrabber = require(__dirname + "/..");
   var dsc;
@@ -27,6 +29,20 @@ describe("DscGrabber", function() {
     dsc.parse(function(err, parsed) {
       assert.strictEqual(err.code, "ENOENT");
       assert.notStrictEqual(err, "undefined");
+      done();
+    });
+  });
+
+  it("parses a remote plain dsc", function(done) {
+    var f = "dsc-without-pgp.dsc";
+    nock(remote)
+      .get("/" + f)
+      .replyWithFile(200, data + f);
+
+    dsc = new DscGrabber("http://remote.site/dsc-without-pgp.dsc");
+    dsc.parse(function(err, parsed) {
+      assert.strictEqual(err, null);
+      assert.strictEqual(parsed.format, "3.0 (native)");
       done();
     });
   });
