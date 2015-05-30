@@ -47,6 +47,20 @@ describe("DscGrabber", function() {
     });
   });
 
+  it("parses a remote pgp wrapped dsc", function(done) {
+    var f = "dsc-with-pgp.dsc";
+    nock(remote)
+      .get("/" + f)
+      .replyWithFile(200, data + f);
+
+    dsc = new DscGrabber("http://remote.site/dsc-with-pgp.dsc");
+    dsc.parse(function(err, parsed) {
+      assert.strictEqual(err, null);
+      assert.strictEqual(parsed.format, "1.0");
+      done();
+    });
+  });
+
 
 
 });
