@@ -1,0 +1,17 @@
+{
+  "name": "deb-source-grabber",
+  "version": "0.0.1",
+  "description": "Debian source grabber",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha test"
+  },
+  "author": "Mohammad Anwari <mdamt@mdamt.net> (http://aksi.mdamt.net/)",
+  "license": "MIT",
+  "dependencies": {
+    "internet-message": "^1.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  }
+}
