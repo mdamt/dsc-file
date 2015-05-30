@@ -11,4 +11,14 @@ describe("DscGrabber", function() {
       done();
     });
   });
+
+  it("parses a dsc enclosed in PGP body", function(done) {
+    dsc = new DscGrabber(data + "dsc-with-pgp.dsc");
+    dsc.parse(function(err, parsed) {
+      assert.strictEqual(parsed.format, "1.0");
+      done();
+    });
+  });
+
+
 });
