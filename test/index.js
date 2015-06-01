@@ -178,10 +178,12 @@ describe("Getting actual files", function() {
       result.stream.on("end", function() {
         hash.end();
         var h = hash.read();
+        assert.strictEqual(result.meta.name, "file1.tar.gz");
         assert.strictEqual(result.meta.hash, h);
         done();
       });
       result.stream.pipe(hash);
     });
   });
+
 });
