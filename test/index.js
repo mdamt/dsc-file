@@ -86,7 +86,7 @@ describe("Parsing DSC", function() {
 
 });
 
-describe("Get files", function() {
+describe("Get file list", function() {
   it("gets list of files from a plain dsc", function(done) {
     var f = "dsc-without-pgp.dsc";
     dsc = new DscGrabber(data + f);
@@ -118,6 +118,5 @@ describe("Get files", function() {
       done();
     });
   });
-
-
 });
+
