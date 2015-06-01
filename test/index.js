@@ -87,7 +87,7 @@ describe("Parsing DSC", function() {
 });
 
 describe("Get files", function() {
-  it("get list of files from a plain dsc", function(done) {
+  it("gets list of files from a plain dsc", function(done) {
     var f = "dsc-without-pgp.dsc";
     dsc = new DscGrabber(data + f);
     dsc.files(function(err, files) {
@@ -98,7 +98,7 @@ describe("Get files", function() {
     });
   });
 
-  it("get list of multiple files", function(done) {
+  it("gets list of multiple files", function(done) {
     var f = "dsc-with-pgp.dsc";
     dsc = new DscGrabber(data + f);
     dsc.files(function(err, files) {
@@ -109,5 +109,15 @@ describe("Get files", function() {
       done();
     });
   });
+
+  it("gets an error from a broken dsc", function(done) {
+    var f = "broken.dsc";
+    dsc = new DscGrabber(data + f);
+    dsc.files(function(err, files) {
+      assert.notStrictEqual(err, null);
+      done();
+    });
+  });
+
 
 });
