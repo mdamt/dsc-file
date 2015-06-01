@@ -186,4 +186,25 @@ describe("Getting actual files", function() {
     });
   });
 
+  it("breaks when index is invalid", function(done) {
+    var f = "/tmp/file.dsc";
+    dsc = new DscGrabber(f);
+    dsc.getFile(1).catch(function(err) {
+      assert.strictEqual(err.code, "EINVAL");
+      done();
+    });
+  });
+
+  it("breaks when file is non existant", function(done) {
+    var f = "/tmp/file-nonexistant.dsc";
+    dsc = new DscGrabber(f);
+    dsc.getFile(1).catch(function(err) {
+      assert.strictEqual(err.code, "ENOENT");
+      done();
+    });
+  });
+
+
+
+
 });
