@@ -101,6 +101,21 @@ describe("Get file list", function() {
     });
   });
 
+  it("catches errorneous local dsc", function(done) {
+    dsc = new DscGrabber(data + "non-existant");
+    dsc.files().catch(function(err) {
+      done();
+    });
+  });
+
+
+  it("catches errorneous remote dsc", function(done) {
+    dsc = new DscGrabber("http://0.0.0.1/nonexistant.dsc");
+    dsc.files().catch(function(err) {
+      done();
+    });
+  });
+
   it("gets an error from a broken dsc", function(done) {
     var f = "broken.dsc";
     dsc = new DscGrabber(data + f);
@@ -110,5 +125,4 @@ describe("Get file list", function() {
     });
   });
 });
-
 
