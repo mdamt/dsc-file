@@ -2,8 +2,9 @@ var assert = require("assert");
 var nock = require("nock");
 var data = __dirname + "/assets/";
 var remote = "http://remote.site";
-describe("DscGrabber", function() {
-  var DscGrabber = require(__dirname + "/..");
+var DscGrabber = require(__dirname + "/..");
+
+describe("Parsing DSC", function() {
   var dsc;
   
   it("parses a plain dsc", function(done) {
@@ -83,6 +84,30 @@ describe("DscGrabber", function() {
     });
   });
 
+});
 
+describe("Get files", function() {
+  it("get list of files from a plain dsc", function(done) {
+    var f = "dsc-without-pgp.dsc";
+    dsc = new DscGrabber(data + f);
+    dsc.files(function(err, files) {
+      assert.strictEqual(files.length, 1);
+      assert.strictEqual(files[0].name, "manokwari_0.2.1.37.tar.gz");
+      assert.strictEqual(err, null);
+      done();
+    });
+  });
+
+  it("get list of multiple files", function(done) {
+    var f = "dsc-with-pgp.dsc";
+    dsc = new DscGrabber(data + f);
+    dsc.files(function(err, files) {
+      assert.strictEqual(err, null);
+      assert.strictEqual(files.length, 2);
+      assert.strictEqual(files[0].name, "abcmidi_20070318.orig.tar.gz");
+      assert.strictEqual(files[1].name, "abcmidi_20070318-3.diff.gz");
+      done();
+    });
+  });
 
 });
