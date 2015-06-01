@@ -126,3 +126,62 @@ describe("Get file list", function() {
   });
 });
 
+describe("Getting actual files", function() {
+  var mock = require("mock-fs");
+  var crypto = require("crypto");
+  var fs = require("fs");
+
+  before(function(done) {
+    var hash = crypto.createHash("md5");
+    hash.setEncoding("hex");
+    // Prepare a dummy file
+    var c = [];
+    for (var i = 0; i < 1000; i ++) {
+      c.push(i);
+    }
+    var b = new Buffer(c);
+    mock({
+      "/tmp/file1.tar.gz": b
+    });
+
+    var createDsc = function(hash, cb) {
+      // Save dsc file
+      var text = "Files: " + hash.read() + " " + b.length + " " + "file1.tar.gz\n";
+      var f = fs.createWriteStream("/tmp/file.dsc");
+      f.write(text);
+      f.close();
+      cb();
+    }
+
+    var f = fs.createReadStream("/tmp/file1.tar.gz");
+    f.on("end", function() {
+      // Calculate md5 hash
+      hash.end();
+      createDsc(hash, function() {
+        done();
+      });
+    });
+    f.pipe(hash);
+  });
+
+  after(function(done) {
+    mock.restore();
+    done();
+  });
+
+  it("gets first file", function(done) {
+    var f = "/tmp/file.dsc";
+    dsc = new DscGrabber(f);
+    dsc.getFile(0).then(function(result) {
+      var hash = crypto.createHash("md5");
+      hash.setEncoding("hex");
+      result.stream.on("end", function() {
+        hash.end();
+        var h = hash.read();
+        assert.strictEqual(result.meta.hash, h);
+        done();
+      });
+      result.stream.pipe(hash);
+    });
+  });
+});
