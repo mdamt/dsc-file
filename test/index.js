@@ -9,8 +9,7 @@ describe("Parsing DSC", function() {
   
   it("parses a plain dsc", function(done) {
     dsc = new DscGrabber(data + "dsc-without-pgp.dsc");
-    dsc.parse(function(err, parsed) {
-      assert.strictEqual(err, null);
+    dsc.parse().then(function(parsed) {
       assert.strictEqual(parsed.format, "3.0 (native)");
       done();
     });
@@ -18,8 +17,7 @@ describe("Parsing DSC", function() {
 
   it("parses a dsc enclosed in PGP body", function(done) {
     dsc = new DscGrabber(data + "dsc-with-pgp.dsc");
-    dsc.parse(function(err, parsed) {
-      assert.strictEqual(err, null);
+    dsc.parse().then(function(parsed) {
       assert.strictEqual(parsed.format, "1.0");
       done();
     });
@@ -27,9 +25,8 @@ describe("Parsing DSC", function() {
 
   it("breaks because specified file doesn't exist", function(done) {
     dsc = new DscGrabber(data + "nonexistant-dsc");
-    dsc.parse(function(err, parsed) {
+    dsc.parse().catch(function(err) {
       assert.strictEqual(err.code, "ENOENT");
-      assert.notStrictEqual(err, "undefined");
       done();
     });
   });
@@ -41,8 +38,7 @@ describe("Parsing DSC", function() {
       .replyWithFile(200, data + f);
 
     dsc = new DscGrabber("http://remote.site/dsc-without-pgp.dsc");
-    dsc.parse(function(err, parsed) {
-      assert.strictEqual(err, null);
+    dsc.parse().then(function(parsed) {
       assert.strictEqual(parsed.format, "3.0 (native)");
       done();
     });
@@ -55,8 +51,7 @@ describe("Parsing DSC", function() {
       .replyWithFile(200, data + f);
 
     dsc = new DscGrabber("http://remote.site/dsc-with-pgp.dsc");
-    dsc.parse(function(err, parsed) {
-      assert.strictEqual(err, null);
+    dsc.parse().then(function(parsed) {
       assert.strictEqual(parsed.format, "1.0");
       done();
     });
@@ -69,17 +64,15 @@ describe("Parsing DSC", function() {
       .reply(404,{});
 
     dsc = new DscGrabber("http://remote.site/nonexistant.dsc");
-    dsc.parse(function(err, parsed) {
+    dsc.parse().catch(function(err) {
       assert.strictEqual(err.code, 404);
-      assert.notStrictEqual(err, "undefined");
       done();
     });
   });
 
   it("parses a errorneous remote dsc", function(done) {
     dsc = new DscGrabber("http://0.0.0.1/nonexistant.dsc");
-    dsc.parse(function(err, parsed) {
-      assert.notStrictEqual(err, "undefined");
+    dsc.parse().catch(function(err) {
       done();
     });
   });
@@ -90,10 +83,9 @@ describe("Get file list", function() {
   it("gets list of files from a plain dsc", function(done) {
     var f = "dsc-without-pgp.dsc";
     dsc = new DscGrabber(data + f);
-    dsc.files(function(err, files) {
+    dsc.files().then(function(files) {
       assert.strictEqual(files.length, 1);
       assert.strictEqual(files[0].name, "manokwari_0.2.1.37.tar.gz");
-      assert.strictEqual(err, null);
       done();
     });
   });
@@ -101,8 +93,7 @@ describe("Get file list", function() {
   it("gets list of multiple files", function(done) {
     var f = "dsc-with-pgp.dsc";
     dsc = new DscGrabber(data + f);
-    dsc.files(function(err, files) {
-      assert.strictEqual(err, null);
+    dsc.files().then(function(files) {
       assert.strictEqual(files.length, 2);
       assert.strictEqual(files[0].name, "abcmidi_20070318.orig.tar.gz");
       assert.strictEqual(files[1].name, "abcmidi_20070318-3.diff.gz");
@@ -113,10 +104,11 @@ describe("Get file list", function() {
   it("gets an error from a broken dsc", function(done) {
     var f = "broken.dsc";
     dsc = new DscGrabber(data + f);
-    dsc.files(function(err, files) {
+    dsc.files().catch(function(err) {
       assert.notStrictEqual(err, null);
       done();
     });
   });
 });
+
 

@@ -12,7 +12,8 @@
   "license": "MIT",
   "dependencies": {
     "hyperquest": "^1.2.0",
-    "internet-message": "^1.0.0"
+    "internet-message": "^1.0.0",
+    "promise": "^7.0.1"
   },
   "devDependencies": {
     "blanket": "^1.1.7",
